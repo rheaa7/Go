@@ -24,6 +24,7 @@ func NewTrie() *Trie {
 
 func (trie *Trie) AddWord(entry string) {
     curr := trie.Root
+    fmt.Println(curr)
     index := 0
     for _, i := range entry {
         letter := string(i)
@@ -38,12 +39,15 @@ func (trie *Trie) AddWord(entry string) {
                 var nodeMap = make(map[string] *Node)
                 curr.Children[letter] = &Node{Letter: letter, Children: nodeMap, WordEnd: false}
             }
+             
             // curr.Children[letter] = &node
             // //fmt.Println(curr.Children[letter])
         }
         if (index == length) {
             curr.Children[letter].WordEnd = true
         }
+        
+       
         // curr = curr.Children[letter]
         //     if i == len(entry) - 1 {
         //         fmt.Println("what")
@@ -56,17 +60,18 @@ func (trie *Trie) AddWord(entry string) {
         //     curr = curr.Children[letter]
         // }
     }
-    // fmt.Println(trie.Root)
+    fmt.Println(trie.Root)
 
 }
 
 func (trie *Trie) FindEntries(prefix string, max uint8) []string {
     fmt.Println(trie.Count)
     currentNode := trie.Root
-    // currentNode = make(map[rune] *Node)
+    fmt.Println(currentNode)
     for i := range prefix {
         letter := string(i)
         currentNode = currentNode.Children[letter]
+        // fmt.Println(currentNode)
     }
     
     listOfWords := trie.FindEntriesHelper(max, prefix, currentNode)

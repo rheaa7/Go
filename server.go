@@ -7,36 +7,47 @@ import (
     "log"
     "bufio"
     "github.com/rheaa7/Go/trie"
+    "io"
 )
 
-func main()  {
-     trie := trie.NewTrie()
-     
-     
-    //reads text file and prints it out 
-    file, err := os.Open("data/wordsEn.txt")
+
+func readFile(path string) (*trie.Trie) {
+     //reads text file and prints it out 
+    file, err := os.Open(path)
         if err != nil {
             log.Fatal(err)
         }
         defer file.Close()
+        return reader(file)
+        
+}
 
-        scanner := bufio.NewScanner(file)
+func reader(file io.Reader) (*trie.Trie) {
+    trie := trie.NewTrie()
+    reader := bufio.NewReader(file)
+    scanner := bufio.NewScanner(reader)
+    
         for scanner.Scan() {
             fmt.Println(scanner.Text()) //print contents of file
-            //trie.AddWord(scanner.Text())
+            // trie.AddWord(scanner.Text())
         }
+        return trie
+}
 
-        if err := scanner.Err(); err != nil {
-            log.Fatal(err)
-        }
-    
+
+func main()  {
+    // trie := trie.NewTrie()
+    trie := readFile("data/wordsEn.txt")
+  
     trie.AddWord("hello")
+    trie.AddWord("heo")
     trie.AddWord("hel")
     trie.AddWord("hey")
     trie.AddWord("hell")
     trie.AddWord("he")
     
-    trie.FindEntries("he" , 10);
+
+    fmt.Println(trie.FindEntries("he" , 10))
     fmt.Println("Server listening on port 9000...")
     http.ListenAndServe(":9000", nil)
 
