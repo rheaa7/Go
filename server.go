@@ -10,7 +10,7 @@ import (
     "io"
 )
 
-
+//open and read file 
 func readFile(path string) (*trie.Trie) {
      //reads text file and prints it out 
     file, err := os.Open(path)
@@ -22,6 +22,7 @@ func readFile(path string) (*trie.Trie) {
         
 }
 
+//initilize reader to read contents of file
 func reader(file io.Reader) (*trie.Trie) {
     trie := trie.NewTrie()
     reader := bufio.NewReader(file)
@@ -36,9 +37,17 @@ func reader(file io.Reader) (*trie.Trie) {
 
 
 func main()  {
-    // trie := trie.NewTrie()
-    trie := readFile("data/wordsEn.txt")
+    
+    //accepts command line argument that specifies location of data file to load into trie
+    argsWithoutProg := osArgs[1:]
+     trie := trie.NewTrie()
+     if (len(argsWithoutProg) == 0 ) {
+         trie = readFile("data/wordsEn.txt")
+     } else {
+         trie = readFile(os.Args[1])
+    }
   
+    //testing add words
     trie.AddWord("hello")
     trie.AddWord("heo")
     trie.AddWord("hel")
@@ -48,6 +57,10 @@ func main()  {
     
 
     fmt.Println(trie.FindEntries("he" , 10))
+    
+    http.Handle("/", http.FileServer(http.Dir("./static")))
+    
+    //listen and server on port 9000
     fmt.Println("Server listening on port 9000...")
     http.ListenAndServe(":9000", nil)
 
@@ -68,3 +81,4 @@ func main()  {
 //         }
 //     }
 
+//set things to lowercase in add word 
