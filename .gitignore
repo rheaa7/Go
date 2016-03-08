@@ -1,0 +1,10 @@
+
+
+node_modules
+.idea
+.DS_Store
+*.vagrant
+
+# ignore all files in any directory named `secret`
+**/secret/*
+**/data/*
