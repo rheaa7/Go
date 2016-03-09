@@ -39,7 +39,7 @@ func reader(file io.Reader) (*trie.Trie) {
 func main()  {
     
     //accepts command line argument that specifies location of data file to load into trie
-    argsWithoutProg := osArgs[1:]
+    argsWithoutProg := os.Args[1:]
      trie := trie.NewTrie()
      if (len(argsWithoutProg) == 0 ) {
          trie = readFile("data/wordsEn.txt")
