@@ -119,21 +119,3 @@ func main()  {
     http.ListenAndServe(":9000", nil)
 
 }
-
-
-
-
-
-
-//    dir:="./data/"
-//    if len(os.Args) > 1 {
-//         if _, err := os.Stat(os.Args[1]); err == nil {
-//             dir = os.Args[1]
-//             if dir[len(dir)-1:] != "/" {
-//                 dir += "/"
-//             }
-//         }
-//     }
-
-//set things to lowercase in add word 
-//

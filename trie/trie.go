@@ -80,6 +80,10 @@ func (trie *Trie) AddWord(entry string) {
 }
 
 func (trie *Trie) FindEntries(prefix string, max int) []string {
+    if (prefix == "") {
+        return make([]string, 0)
+    }
+    
     fmt.Println(trie.Count)
     currentNode := trie.Root
     fmt.Println(currentNode)

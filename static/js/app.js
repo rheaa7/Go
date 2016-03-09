@@ -7,7 +7,7 @@ angular.module('SearchWords', [])
 				search : search,
 				max : max
 			}
-			console.log(data)
+			console.log("Search;" + search)
 			
 			if (max >= 10) {
 				$http.get('/api/v1/suggestions/?search=' + search + '&max=' + max)
