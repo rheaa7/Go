@@ -23,7 +23,7 @@
                 <!-- filter input; you will add attributes to make this filter the list based on value entered -->
                 <div class="filter-ui">
                     <input type="text" class="form-control" placeholder="Search..." ng-keyup="searchString(search, max)" ng-model="search" />
-                   <form> <input type="text" ng-model="max" name="max" value="20" ng-init="max = 20"></input> </form>
+                   <form> <input type="text" ng-model="max" name="max" value="20" ng-init="max = 20""></input> </form>
                    <div id="displayResults">
                        <p ng-repeat="result in results"><a href="https://dictionary.com/browse/{{result}}">{{result}}</a></p>
                    </div>

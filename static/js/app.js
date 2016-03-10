@@ -3,13 +3,14 @@
 angular.module('SearchWords', [])
 	.controller('SearchController', function($scope, $http) {
 		$scope.searchString = function(search, max) {
+
 			var data = {
 				search : search,
 				max : max
 			}
 			console.log("Search;" + search)
 			
-			if (max >= 10) {
+			if (max >= 10 && max <= 50) {
 				$http.get('/api/v1/suggestions/?search=' + search + '&max=' + max)
 					.then(function(results) {
 						console.log(results)
