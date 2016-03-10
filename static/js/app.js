@@ -8,7 +8,7 @@ angular.module('SearchWords', [])
 				search : search,
 				max : max
 			}
-			console.log("Search;" + search)
+			console.log("Search:" + search)
 			
 			if (max >= 10 && max <= 50) {
 				$http.get('/api/v1/suggestions/?search=' + search + '&max=' + max)
@@ -17,6 +17,10 @@ angular.module('SearchWords', [])
 						console.log(results.data)
 						$scope.results = results.data.word;
 						
+					}).catch(function(err) {
+						if (err == 400) {
+							$('#400').css('visibility', 'visible');
+						}
 					})
 				} 
 		}

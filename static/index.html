@@ -5,12 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Suggestion Service</title>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">      
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">    
+        <link rel="stylesheet" href="css/style.css" />
 
         <!-- hot mess to minified Angular library -->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.1/angular.min.js"></script>
-        <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.min.js"></script>
-        
         
     </head>
     <body ng-app='SearchWords' ng-controller='SearchController'>
@@ -27,9 +26,12 @@
                    <div id="displayResults">
                        <p ng-repeat="result in results"><a href="https://dictionary.com/browse/{{result}}">{{result}}</a></p>
                    </div>
+                   <div id="error"> Word does not exist in dictionary </div>
                 </div>
             </section>            
         </main>
+        
+        <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.min.js"></script>
         
         <!-- link to your Angular application -->
         <script src="js/app.js"></script>

@@ -84,10 +84,11 @@ func (trie *Trie) FindEntries(prefix string, max int) []string {
         return make([]string, 0)
     }
     
-    fmt.Println(trie.Count)
+    // fmt.Println(trie.Count)
     currentNode := trie.Root
     fmt.Println(currentNode)
     for _, i := range prefix {
+        fmt.Println(currentNode)
         if (currentNode != nil) {
             letter := string(i)
             currentNode = currentNode.Children[letter]

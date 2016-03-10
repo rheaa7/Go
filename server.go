@@ -15,20 +15,22 @@ import (
 )
 
 var tri = trie.NewTrie()
+var req bool
 
 type SearchResponse struct {
     Word []string `json:"word"`
 }
 
 //open and read file 
-func readFile(path string) (*trie.Trie) {
+func readFile(path string) {
      //reads text file and prints it out 
     file, err := os.Open(path)
         if err != nil {
             log.Fatal(err)
         }
         defer file.Close()
-        return reader(file)
+        tri = reader(file)
+        req = true
         
 }
 
@@ -56,48 +58,57 @@ func reader(file io.Reader) (*trie.Trie) {
             //     tri.AddWord("hell")
             //     tri.AddWord("he")
         }
+        fmt.Println("ok")
         return tri
 }
 
 func search(w http.ResponseWriter, r *http.Request) {
-    word := r.URL.Query().Get("search")
-
-    max := r.URL.Query().Get("max")
-    newMax, _ := strconv.Atoi(max)
-    entries := tri.FindEntries(word, newMax)
-    fmt.Println("Word")
-    fmt.Println(word)
-    fmt.Println("Entires")
-    fmt.Println(entries)
-    fmt.Println("Max")
-    fmt.Println(newMax)
-    
-    resp := SearchResponse{Word:entries}
-      
-       //convert struct to JSON
-        j, err := json.Marshal(resp)
-        if nil != err {
-            log.Println(err)
-            w.WriteHeader(500)
-            w.Write([]byte(err.Error()))
-        } else {
-            //tell the client we are sending back JSON
-            w.Header().Add("Content-Type", "application/json")
-            w.Write(j)
-        }
+    if (req) {
+        word := r.URL.Query().Get("search")
+        max := r.URL.Query().Get("max")
+        newMax, _ := strconv.Atoi(max)
+        
+        entries := tri.FindEntries(word, newMax)
+        // fmt.Println(word)
+        // fmt.Println("Entires")
+        // fmt.Println(entries)
+        // fmt.Println("Max")
+        // fmt.Println(newMax)
+        
+        resp := SearchResponse{Word:entries}
+        
+        //convert struct to JSON
+            j, err := json.Marshal(resp)
+            if nil != err {
+                log.Println(err)
+                w.WriteHeader(500)
+                w.Write([]byte(err.Error()))
+            } else {
+                //tell the client we are sending back JSON
+                if (len(entries) == 0) {
+                    w.WriteHeader(400)
+                }
+                w.Header().Add("Content-Type", "application/json")
+                w.Write(j)
+            }
+     } else {
+         w.WriteHeader(400)
+         w.Write([]byte("error not loading"))
+     }
 }
 
 
 
 func main()  {
+    req = false
     
     //accepts command line argument that specifies location of data file to load into trie
-    argsWithoutProg := os.Args[1:]
-     if (len(argsWithoutProg) == 0 ) {
-         tri = readFile("data/wordsEn.txt")
-     } else {
-         tri = readFile(os.Args[1])
-    }
+    // argsWithoutProg := os.Args[1:]
+    //  if (len(argsWithoutProg) == 0 ) {
+    //      readFile("data/wordsEn.txt")
+    //  } else {
+         go readFile(os.Args[1])
+    // }
   
     //testing add words
     // trie.AddWord("accepts")
