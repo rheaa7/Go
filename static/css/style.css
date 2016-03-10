@@ -1,3 +1,4 @@
+/*displaying error message*/
 div#error {
 	visibility: hidden;
 	color: darkgreen;

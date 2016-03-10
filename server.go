@@ -14,9 +14,11 @@ import (
     "strings"
 )
 
+//create new trie
 var tri = trie.NewTrie()
 var req bool
 
+//construct search function
 type SearchResponse struct {
     Word []string `json:"word"`
 }
@@ -34,7 +36,9 @@ func readFile(path string) {
         
 }
 
-//initilize reader to read contents of file
+//initilize reader to read contents of file and monitors memory 
+//usage as the trie loads, and stop loading when your memory usage 
+//approaches 1GB.
 func reader(file io.Reader) (*trie.Trie) {
     reader := bufio.NewReader(file)
     scanner := bufio.NewScanner(reader)
@@ -48,20 +52,12 @@ func reader(file io.Reader) (*trie.Trie) {
             } else {
                 break
             }
-            // tri.AddWord(scanner.Text())
-            // fmt.Println(scanner.Text()) //print contents of file
-            
-            //    tri.AddWord("accepts")
-            //     tri.AddWord("abet")
-            //     tri.AddWord("aaron")
-            //     tri.AddWord("ahoy")
-            //     tri.AddWord("hell")
-            //     tri.AddWord("he")
         }
-        fmt.Println("ok")
-        return tri
+    return tri
 }
 
+
+//takes in searched query and suggests words
 func search(w http.ResponseWriter, r *http.Request) {
     if (req) {
         word := r.URL.Query().Get("search")
@@ -69,15 +65,9 @@ func search(w http.ResponseWriter, r *http.Request) {
         newMax, _ := strconv.Atoi(max)
         
         entries := tri.FindEntries(word, newMax)
-        // fmt.Println(word)
-        // fmt.Println("Entires")
-        // fmt.Println(entries)
-        // fmt.Println("Max")
-        // fmt.Println(newMax)
-        
         resp := SearchResponse{Word:entries}
-        
-        //convert struct to JSON
+      
+            //convert struct to JSON
             j, err := json.Marshal(resp)
             if nil != err {
                 log.Println(err)
@@ -92,6 +82,7 @@ func search(w http.ResponseWriter, r *http.Request) {
                 w.Write(j)
             }
      } else {
+         //returns error if file still loading
          w.WriteHeader(400)
          w.Write([]byte("error not loading"))
      }
@@ -102,31 +93,13 @@ func search(w http.ResponseWriter, r *http.Request) {
 func main()  {
     req = false
     
-    //accepts command line argument that specifies location of data file to load into trie
-    // argsWithoutProg := os.Args[1:]
-    //  if (len(argsWithoutProg) == 0 ) {
-    //      readFile("data/wordsEn.txt")
-    //  } else {
-         go readFile(os.Args[1])
-    // }
-  
-    //testing add words
-    // trie.AddWord("accepts")
-    // trie.AddWord("abet")
-    // trie.AddWord("aaron")
-    // trie.AddWord("ahoy")
-    // trie.AddWord("hell")
-    // trie.AddWord("he")
-    
-
-    // fmt.Println(trie.FindEntries("a" , 10))
-    
-    
-      http.Handle("/", http.FileServer(http.Dir("./static")))
-      http.HandleFunc("/api/v1/suggestions/", search)
+    //calls go routine
+    go readFile(os.Args[1]) 
+    http.Handle("/", http.FileServer(http.Dir("./static")))
+    http.HandleFunc("/api/v1/suggestions/", search)
     
     //listen and server on port 9000
     fmt.Println("Server listening on port 9000...")
     http.ListenAndServe(":9000", nil)
-
+    
 }
